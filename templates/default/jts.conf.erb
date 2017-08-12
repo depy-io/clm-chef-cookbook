@@ -1,0 +1,28 @@
+description "jts"
+
+start on startup
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+env DISPLAY=localhost:1.0
+
+post-start script
+	set -x
+	Xvfb :1 -screen 0 800x600x24&
+	exec su root -c "ulimit -n 65536;ulimit -u 10000;/opt/IBM/JazzTeamServer/server/server.startup"
+end script
+
+post-stop script
+	set -x
+	/opt/IBM/JazzTeamServer/server/server.shutdown
+<% if node['clm']['version'].to_s < "6.0.1_iFix010" %>
+	pid=$(pidof /opt/IBM/JazzTeamServer/server/jre/bin/java)
+	if [ -n "$pid" ]; then
+		kill -9 $pid
+	fi
+<% end %>
+	pid=$(pidof /usr/bin/Xvfb)
+	if [ -n "$pid" ]; then
+		kill -9 $pid
+	fi
+end script

@@ -1,0 +1,12 @@
+description "jbe"
+
+start on startup
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+post-start script
+  /etc/default/jbe-deamon.sh
+end script
+
+post-stop script
+end script

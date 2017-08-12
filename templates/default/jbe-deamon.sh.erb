@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export JAVA_HOME=/opt/IBM/TeamConcert/jdk
+/opt/IBM/TeamConcertBuild/buildsystem/buildengine/eclipse/jbe.sh -repository https://<%= node['clm']['server_hostname'] %>:9443/ccm -userId build -pass build -engineId jke.dev.engine >> /var/log/jbe.log &
+
+exit 0

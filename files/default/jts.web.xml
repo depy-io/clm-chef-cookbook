@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Licensed Materials - Property of IBM
+	(c) Copyright IBM Corporation 2009, 2015. All Rights Reserved.
+	
+	Note to U.S. Government Users Restricted Rights:  
+	Use, duplication or disclosure restricted by GSA ADP Schedule 
+	Contract with IBM Corp. 
+ -->
+
+<!-- 
+Note that the web.xml file is the one used in the production WAR file. A development
+version is maintained in project com.ibm.team.server.embedded.webapp. Any changes in either version
+should be reconciled.
+ -->
+<web-app id="WebApp_ID" 
+		 version="2.4" 
+		 xmlns="http://java.sun.com/xml/ns/j2ee" 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+		 
+	<filter>
+		<filter-name>bridgefilter</filter-name>
+		<filter-class>com.ibm.team.repository.server.servletbridge.BridgeFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>bridgefilter</filter-name>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+	</filter-mapping>
+
+	<!--
+	  Allows requests to j_security_check to be checked for a CSRF attack.  
+	-->
+    <filter>
+      <filter-name>loginfilter</filter-name>
+      <filter-class>com.ibm.team.repository.server.servletbridge.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+      <filter-name>loginfilter</filter-name>
+      <url-pattern>/j_security_check</url-pattern>
+    </filter-mapping>
+   <filter-mapping>
+      <filter-name>loginfilter</filter-name>
+      <url-pattern>/authenticated/j_security_check</url-pattern>
+    </filter-mapping>
+	  <filter-mapping>
+      <filter-name>loginfilter</filter-name>
+      <url-pattern>/auth/j_security_check</url-pattern>
+    </filter-mapping>	     
+
+	<servlet id="bridge">
+		<description>Equinox Bridge Servlet</description>
+		<display-name>Equinox Bridge Servlet</display-name>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<servlet-class>com.ibm.team.repository.server.servletbridge.JazzServlet</servlet-class>
+		<init-param>
+			<param-name>enableFrameworkControls</param-name>
+			<param-value>false</param-value>			
+		</init-param>
+		<!--
+		<init-param>
+			<param-name>commandline</param-name>
+			<param-value>-console</param-value>			
+		</init-param>
+		-->				
+		<init-param>
+			<param-name>extendedFrameworkExports</param-name>
+			<param-value>com.ibm.team.repository.server.servletbridge,javax.servlet.resources;version="2.5",javax.servlet;version="2.5",javax.servlet.http;version="2.5"</param-value>
+		</init-param>
+		<init-param>
+			<param-name>frameworkLauncherClass</param-name>
+			<param-value>com.ibm.team.repository.server.servletbridge.JazzFrameworkLauncher</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<distributable/>
+	
+	<servlet-mapping>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- set session timeouts to occur after 6 hours -->
+	<session-config>
+		<session-timeout>360</session-timeout>
+	</session-config>
+	
+	<mime-mapping>
+		<extension>ico</extension>
+		<mime-type>image/vnd.microsoft.icon</mime-type> 
+	</mime-mapping>
+	<mime-mapping>
+		<extension>cur</extension>
+		<mime-type>image/vnd.microsoft.icon</mime-type> 
+	</mime-mapping>
+	<mime-mapping>
+		<extension>png</extension>
+		<mime-type>image/png</mime-type> 
+	</mime-mapping>
+	<mime-mapping>
+		<extension>swf</extension>
+		<mime-type>application/x-shockwave-flash</mime-type> 
+	</mime-mapping>	
+
+	<!-- Only one URL is secured. If authentication is required for a service,
+	     then the client will be redirected to a URL that triggers authentication.
+	     Applications that enable JSA SSO (OIDC) or that delegate authentication to
+	     a JTS will redirect to an internal service. Applications that are configured
+	     for container authentication will redirect to this one secure URL. -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>secure</web-resource-name>
+			<url-pattern>/secure/authenticated/identity</url-pattern>
+		</web-resource-collection>
+		
+		<auth-constraint>
+			<role-name>JazzUsers</role-name>
+			<role-name>JazzAdmins</role-name>
+			<role-name>JazzGuests</role-name>
+			<role-name>JazzProjectAdmins</role-name>
+		</auth-constraint>
+		
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<!-- opens what's needed, leaving everything else secured -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>open</web-resource-name>
+			<url-pattern>/*</url-pattern>
+			<url-pattern>/_theming/*</url-pattern>
+			<url-pattern>/web/*</url-pattern>
+			<url-pattern>/repo/*</url-pattern>
+			<url-pattern>/xip_server</url-pattern>
+			<url-pattern>/admin/*</url-pattern>
+			<url-pattern>/setup/*</url-pattern>
+			<url-pattern>/auth/*</url-pattern>
+			<url-pattern>/oauth/*</url-pattern>
+			<url-pattern>/oauth-request-token</url-pattern>
+			<url-pattern>/oauth-access-token</url-pattern>
+			<url-pattern>/secure/oauth/*</url-pattern>
+			<url-pattern>/secure/oauth-request-token</url-pattern>
+			<url-pattern>/secure/oauth-access-token</url-pattern>
+
+			<!-- CQ REST / CQ bridge -->
+			<url-pattern>/cqrest/*</url-pattern>
+			<url-pattern>/_rcm-resources/*</url-pattern>
+			<url-pattern>/cqweb/*</url-pattern>
+			<url-pattern>/_ajax-modules/com.ibm.rational.cm.Navigator</url-pattern>
+			<url-pattern>/_ajax-modules/com.ibm.rational.cm.Record</url-pattern>
+			<url-pattern>/_ajax-modules/com.ibm.rational.cm.RecordChooser</url-pattern>
+			<url-pattern>/_ajax-modules/com.ibm.rational.cm.ResultSet</url-pattern>
+		</web-resource-collection>
+		
+		<!-- Leaving out the <auth-constraint> section means these resources don't require authentication -->
+		
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	
+	<!-- Opens up some services to unauthenticated / unencrypted 
+		 access to avoid dealing with credentials and security certificates in
+		 server to server communication -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>open-unencrypted</web-resource-name>
+			<url-pattern>/service/com.ibm.team.repository.service.internal.license.IFloatingLicenseService/*</url-pattern>
+		</web-resource-collection>
+		
+		<!-- Leaving out the <auth-constraint> section means these resources don't require authentication -->
+		
+		<!-- Leaving out the <user-data-constraint> section means these resources don't require SSL -->
+	</security-constraint>
+	
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>Jazz</realm-name>
+	</login-config>
+<!--	
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/auth/authrequired</form-login-page>
+			<form-error-page>/auth/authfailed</form-error-page>
+  		</form-login-config>
+	</login-config>	
+-->
+	
+	<security-role>
+		<role-name>JazzAdmins</role-name>
+	</security-role>
+	
+	<security-role>
+		<role-name>JazzUsers</role-name>
+	</security-role>  
+
+	<security-role>
+		<role-name>JazzGuests</role-name>
+	</security-role>
+
+	<security-role>
+		<role-name>JazzProjectAdmins</role-name>
+	</security-role>
+
+	<security-role>
+		<role-name>JazzDebug</role-name>
+	</security-role>
+
+	<servlet id="errorhandler">
+		<description>Error Handler Servlet</description>
+		<display-name>Error Handler Servlet</display-name>
+		<servlet-name>errorhandler</servlet-name>
+		<servlet-class>com.ibm.team.repository.server.servletbridge.ErrorServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>errorhandler</servlet-name>
+		<url-pattern>/error-page</url-pattern>
+	</servlet-mapping>
+	
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/error-page</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>403</error-code>
+		<location>/auth/error403</location>
+	</error-page>
+	
+</web-app>

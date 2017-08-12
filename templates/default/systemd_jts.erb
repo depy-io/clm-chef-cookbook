@@ -1,0 +1,10 @@
+[Service]
+ExecStart=/opt/IBM/JazzTeamServer/server/server.startup
+ExecStop=/opt/IBM/JazzTeamServer/server/server.shutdown
+Type=forking
+PIDFile=/opt/IBM/JazzTeamServer/server/liberty/servers/.pid/clm.pid
+User=root
+Group=root
+WorkingDirectory=/opt/IBM/JazzTeamServer/server
+LimitNOFILE=65535:65535
+LimitNPROC=10000:10000
