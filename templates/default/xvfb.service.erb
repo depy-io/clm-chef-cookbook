@@ -1,0 +1,11 @@
+# /etc/systemd/system/xvfb.service
+
+[Unit]
+Description=X Virtual Frame Buffer Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/Xvfb :1 -screen 0 800x600x24
+
+[Install]
+WantedBy=multi-user.target
