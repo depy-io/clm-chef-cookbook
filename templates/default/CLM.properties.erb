@@ -69,6 +69,9 @@ lqe\:configure.database.page\:db.type=JDBC
 lqe\:configure.trs.page\:trs.add=AddTRS
 lqe\:configure.database.page\:db.vendor=DERBY
 lqe\:configure.database.page\:db.location=conf/lqe/derbyDB
+<% if node['clm']['version'].to_s >= "6.0.5" %>
+lqe\:configure.backup.page\:backup.enabled=false
+<% end %>
 
 relm\:configure.database.page\:db.jdbc.location=conf/relm/derby/repositoryDB
 relm\:configure.database.page\:db.vendor=DERBY
