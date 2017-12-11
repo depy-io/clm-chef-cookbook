@@ -80,6 +80,9 @@ relm\:configure.database.page\:db.type=JDBC
 ldx\:configure.database.page\:db.type=JDBC
 ldx\:configure.database.page\:db.vendor=DERBY
 ldx\:configure.database.page\:db.location=conf/ldx/derbyDB
+<% if node['clm']['version'].to_s >= "6.0.5" %>
+ldx\:configure.backup.page\:backup.enabled=false
+<% end %>
 
 dcc\:data.warehouse.page\:db.jdbc.password=
 dcc\:data.warehouse.page\:db.jdbc.location=//localhost\:1527/conf/jts/derby/warehouseDB
