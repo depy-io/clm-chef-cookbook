@@ -1,2 +1,2 @@
 # clm-chef-cookbook
-IBM CLM CHEF cookbook
+IBM Collaborative Lifecycle Management Chef cookbook
