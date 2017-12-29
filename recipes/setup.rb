@@ -4,14 +4,20 @@ else
   clm_server_hostname = node['ec2']['public_hostname']
 end
 
+users = data_bag_item('users','users')
+
 template "Setup Properties File RDM False" do
 	path "#{Chef::Config['file_cache_path']}/CLM.properties"
 	source 'CLM.properties.erb'
 	variables (
   		lazy {
   			{
-  				:use_rdm => 'false',
-				  :server_hostname => "#{clm_server_hostname}"
+  				:use_rdm         => 'false',
+				  :server_hostname => "#{clm_server_hostname}",
+          :admin_userid    => "#{users['admin']['userid']}",
+          :admin_password  => "#{users['admin']['password']}",
+          :admin_fullname  => "#{users['admin']['fullname']}",
+          :admin_email     => "#{users['admin']['email']}"
 			}
 		}
 	)
@@ -25,5 +31,5 @@ execute 'CLM Setup without RDM' do
 	action :nothing
 end
 
-include_recipe "depy-clm::patch" if node['clm']['fix'].to_s != ""
-include_recipe "depy-clm::__gcm" if node['gcm']['active'] and node['clm']['version'].to_s >=  '6.0.0'
+include_recipe "clm::patch" if node['clm']['fix'].to_s != ""
+include_recipe "clm::__gcm" if node['gcm']['active'] and node['clm']['version'].to_s >=  '6.0.0'

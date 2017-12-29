@@ -5,10 +5,10 @@ configure.email.page\:notification.mail.enabled=false
 
 user.registry.page\:user.registry.type=DETECT
 
-create.user.page\:userId=<%= node['clm']['admin_userid'] %>
-create.user.page\:password=<%= node['clm']['admin_password'] %>
-create.user.page\:name=<%= node['clm']['admin_fullname'] %>
-create.user.page\:emailAddress=<%= @node['clm']['admin_email'] %>
+create.user.page\:userId=<%= @admin_userid %>
+create.user.page\:password=<%= @admin_password %>
+create.user.page\:name=<%= @admin_fullname %>
+create.user.page\:emailAddress=<%= @admin_email %>
 
 admin.access\:ws.allow.admin.access=false
 

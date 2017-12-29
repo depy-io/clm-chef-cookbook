@@ -16,6 +16,6 @@ end
 execute 'CLM Setup for RDM' do
 	user 'root'
 	cwd "/opt/IBM/JazzTeamServer/server"
-	command "./repotools-jts.sh -setup adminUserId=#{node['clm']['admin_userid']} adminPassword=#{node['clm']['admin_password']} includeLifecycleProjectStep=false parametersfile=#{Chef::Config['file_cache_path']}/RDM.properties"
+	command "./repotools-jts.sh -setup adminUserId=#{users['admin']['userid']} adminPassword=#{users['admin']['password']} includeLifecycleProjectStep=false parametersfile=#{Chef::Config['file_cache_path']}/RDM.properties"
 	action :nothing
 end
