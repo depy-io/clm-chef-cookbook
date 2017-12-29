@@ -25,5 +25,5 @@ execute 'CLM Setup without RDM' do
 	action :nothing
 end
 
-include_recipe "depy-clm::patch" if node['clm']['fix'].to_s != ""
-include_recipe "depy-clm::__gcm" if node['gcm']['active'] and node['clm']['version'].to_s >=  '6.0.0'
+include_recipe "clm::patch" if node['clm']['fix'].to_s != ""
+include_recipe "clm::__gcm" if node['gcm']['active'] and node['clm']['version'].to_s >=  '6.0.0'

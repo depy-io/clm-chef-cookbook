@@ -37,7 +37,7 @@ execute 'CLM Installation' do
   action :nothing
 end
 
-include_recipe "depy-clm::__upstart" if node['platform_version'] == '14.04'
-include_recipe "depy-clm::__systemd" if node['platform_version'] == '16.04'
+include_recipe "clm::__upstart" if node['platform_version'] == '14.04'
+include_recipe "clm::__systemd" if node['platform_version'] == '16.04'
 
-include_recipe "depy-clm::__screen_capture" if node['clm']['rtc_screen_capture_jar'].to_s != "" and node['clm']['rqm_screen_capture_jar'].to_s != ""
+include_recipe "clm::__screen_capture" if node['clm']['rtc_screen_capture_jar'].to_s != "" and node['clm']['rqm_screen_capture_jar'].to_s != ""

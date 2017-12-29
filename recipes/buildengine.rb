@@ -47,5 +47,5 @@ execute 'client installation' do
   action :run
 end
 
-include_recipe "depy-clm::__jbe_upstart" if node['platform_version'] == '14.04'
-include_recipe "depy-clm::__jbe_systemd" if node['platform_version'] == '16.04'
+include_recipe "clm::__jbe_upstart" if node['platform_version'] == '14.04'
+include_recipe "clm::__jbe_systemd" if node['platform_version'] == '16.04'
